@@ -1,51 +1,51 @@
-﻿# Lab 7 Report: Error Handling and Error Logging
+﻿# Отчет по лабораторной работе 7: Обработка и логирование ошибок
 
-## Goal
-Implement secure error handling, user-safe fallback behavior, and centralized error logging.
+## Цель
+Реализовать безопасную обработку ошибок, безопасное для пользователя резервное поведение и централизованное логирование ошибок.
 
-## Implemented
-- Added global error subsystem in `error_handler.php`:
-  - `set_error_handler()` for warnings/notices,
-  - `set_exception_handler()` for uncaught exceptions,
-  - `register_shutdown_function()` for fatal errors,
-  - all events written to `logs/errors.log`.
-- Disabled direct error display to users (`display_errors=0`).
-- Added static fallback page:
-  - `safe.html` (contains at least one link back to `index.php`).
-- Updated DB connection in `db.php`:
-  - internal exception details are logged,
-  - user receives generic service-unavailable behavior.
-- Added admin-only error log viewer:
-  - `view_errors.php` with `errors.view` permission.
-- Kept user-facing feedback concise and safe via existing form-level messages.
+## Реализовано
+- Добавлена глобальная подсистема ошибок в `error_handler.php`:
+  - `set_error_handler()` для warnings/notices,
+  - `set_exception_handler()` для неперехваченных исключений,
+  - `register_shutdown_function()` для фатальных ошибок,
+  - все события записываются в `logs/errors.log`.
+- Отключен прямой вывод ошибок пользователю (`display_errors=0`).
+- Добавлена статическая резервная страница:
+  - `safe.html` (содержит минимум одну ссылку назад на `index.php`).
+- Обновлено подключение к БД в `db.php`:
+  - внутренние детали исключений логируются,
+  - пользователь получает обобщенное поведение «сервис недоступен».
+- Добавлен просмотр логов ошибок только для администратора:
+  - `view_errors.php` с разрешением `errors.view`.
+- Сохранена краткая и безопасная обратная связь пользователю через существующие сообщения на уровне форм.
 
-## Why Visible Internal Errors Are Dangerous
-If raw framework/DB error details are shown to normal users, attackers may learn:
-- table names and SQL structure,
-- file system paths,
-- stack traces and internal endpoints,
-- library versions and server specifics.
+## Почему видимые внутренние ошибки опасны
+Если обычному пользователю показывать «сырые» детали ошибок framework/БД, атакующий может узнать:
+- имена таблиц и структуру SQL,
+- пути файловой системы,
+- stack trace и внутренние endpoint,
+- версии библиотек и специфику сервера.
 
-This information directly helps exploit development.
+Эта информация напрямую помогает разработке эксплойтов.
 
-## Why Safe Page Should Be Static
-- It must stay available even when dynamic stack is unstable.
-- It should not depend on DB, sessions, or templates.
-- It gives a controlled fallback UX and avoids exposing internals.
+## Почему безопасная страница должна быть статической
+- Она должна оставаться доступной даже при нестабильности динамического стека.
+- Она не должна зависеть от БД, сессий или шаблонов.
+- Она дает контролируемый fallback UX и не раскрывает внутренние детали.
 
-## Error Log Protection
-- Error details are written to text log file only.
-- Access to `view_errors.php` is restricted to admin role through RBAC permission.
+## Защита лога ошибок
+- Детали ошибок записываются только в текстовый файл лога.
+- Доступ к `view_errors.php` ограничен ролью администратора через разрешение RBAC.
 
-## How to Run
-1. Initialize DB:
+## Как запустить
+1. Инициализируйте БД:
    - `mysql -u root -p < init.sql`
-2. Start server:
+2. Запустите сервер:
    - `php -S localhost:8000`
-3. Login as admin:
+3. Войдите как администратор:
    - `admin / admin123`
-4. Open from admin panel:
+4. Откройте из панели администратора:
    - `view_errors.php`
 
-## Conclusion
-Lab 7 prevents sensitive error disclosure to users while preserving full internal diagnostics for administrators.
+## Вывод
+Лабораторная работа 7 предотвращает раскрытие чувствительных деталей ошибок пользователям, сохраняя при этом полную внутреннюю диагностику для администраторов.

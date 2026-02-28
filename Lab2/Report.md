@@ -1,38 +1,37 @@
-# Lab 2 Report: SQL Injection Prevention
+# Отчет по лабораторной работе 2: Предотвращение SQL-инъекций
 
-## Goal
-Implement protection against SQL injection in the authentication mini-app.
+## Цель
+Реализовать защиту от SQL-инъекций в мини-приложении аутентификации.
 
-## Preconditions Covered
-- Login form created (`index.php`) with login and password fields.
-- Restricted admin page exists (`admin.php`) as target.
-- Database has `user(id, login, password)`.
+## Покрытые предусловия
+- Создана форма входа (`index.php`) с полями логина и пароля.
+- Существует ограниченная страница администратора (`admin.php`) как целевой ресурс.
+- В базе данных есть таблица `user(id, login, password)`.
 
-## Implemented
-1. Added 7 records into `user` table in `init.sql`.
-2. Demonstrated SQLi vulnerability in Lab 1 with payload examples:
-   - login: `admin' -- `
-   - password: any text
-3. Added client-side validation (`validation.js`):
-   - blocks symbols outside allowed sets.
-4. Added server-side validation (`login.php`):
-   - regex validation for login/password.
-   - blocked requests with invalid symbols.
-5. Replaced dynamic SQL with prepared statement:
+## Реализовано
+1. Добавлено 7 записей в таблицу `user` в `init.sql`.
+2. Продемонстрирована уязвимость SQLi в лабораторной работе 1 на примерах payload:
+   - логин: `admin' -- `
+   - пароль: любой текст
+3. Добавлена клиентская валидация (`validation.js`):
+   - блокирует символы вне разрешенных наборов.
+4. Добавлена серверная валидация (`login.php`):
+   - regex-проверка логина/пароля;
+   - отклонение запросов с недопустимыми символами.
+5. Динамический SQL заменен на подготовленный запрос:
    - `SELECT ... WHERE login = :login AND password = :password`.
 
-## Security Verification
-- SQL payloads with `'`, comment markers, or operators are rejected by validation.
-- Prepared statement prevents SQL code from being interpreted as executable query logic.
+## Проверка безопасности
+- SQL payload с `'`, маркерами комментариев или операторами отклоняются валидацией.
+- Подготовленный запрос не позволяет интерпретировать SQL-код как исполняемую логику запроса.
 
-## How to Run
-1. Initialize DB:
+## Как запустить
+1. Инициализируйте БД:
    - `mysql -u root -p < init.sql`
-2. Start server:
+2. Запустите сервер:
    - `php -S localhost:8000`
-3. Open:
+3. Откройте:
    - `http://localhost:8000/index.php`
 
-## Conclusion
-SQL injection on login form is mitigated by combined client/server validation and parameterized queries.
-
+## Вывод
+SQL-инъекция в форме входа смягчена за счет сочетания клиентской/серверной валидации и параметризованных запросов.

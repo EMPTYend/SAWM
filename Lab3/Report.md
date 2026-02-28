@@ -1,44 +1,44 @@
-﻿# Lab 3 Report: XSS Injection Prevention
+﻿# Отчет по лабораторной работе 3: Предотвращение XSS-инъекций
 
-## Goal
-Create a mini guest-book application and prevent XSS attacks.
+## Цель
+Создать мини-приложение гостевой книги и предотвратить XSS-атаки.
 
-## Implemented
-- Reused Lab 2 authentication pages.
-- Added DB table `guest(id, user, text_message, e_mail, data_time_message)`.
-- Added `guestbook.php`:
-  - form for user/email/message input,
-  - insert message into DB,
-  - render all guest-book entries.
-- Added client-side checks in `guest_validation.js`.
-- Added server-side checks in `guestbook.php`:
-  - user regex validation,
-  - email validation,
-  - message length limits,
-  - `strip_tags()` before DB insert,
-  - `htmlspecialchars()` on output.
+## Реализовано
+- Переиспользованы страницы аутентификации из лабораторной работы 2.
+- Добавлена таблица БД `guest(id, user, text_message, e_mail, data_time_message)`.
+- Добавлен `guestbook.php`:
+  - форма ввода пользователя/email/сообщения,
+  - запись сообщения в БД,
+  - отображение всех записей гостевой книги.
+- Добавлены клиентские проверки в `guest_validation.js`.
+- Добавлены серверные проверки в `guestbook.php`:
+  - regex-валидация пользователя,
+  - валидация email,
+  - ограничения длины сообщения,
+  - `strip_tags()` перед вставкой в БД,
+  - `htmlspecialchars()` при выводе.
 
-## XSS Demonstration
-The classic payloads tested during analysis stage:
+## Демонстрация XSS
+Классические payload, протестированные на этапе анализа:
 - `<script>alert(1)</script>`
 - `<img src=x onerror="document.body.innerHTML='Hacked'">`
 
-Expected secure behavior now:
-- payload is blocked by validation or rendered as plain text,
-- browser does not execute attacker JavaScript.
+Ожидаемое безопасное поведение теперь:
+- payload блокируется валидацией или отображается как обычный текст;
+- браузер не выполняет JavaScript атакующего.
 
-## Security Verification
-- Guest-book output is escaped in all table cells.
-- HTML/JS payloads are neutralized.
-- App no longer allows replacing page body or forced redirect via injected script.
+## Проверка безопасности
+- Вывод гостевой книги экранируется во всех ячейках таблицы.
+- HTML/JS payload нейтрализуются.
+- Приложение больше не позволяет подменять содержимое страницы или выполнять принудительный редирект через внедренный скрипт.
 
-## How to Run
-1. Initialize DB:
+## Как запустить
+1. Инициализируйте БД:
    - `mysql -u root -p < init.sql`
-2. Start server:
+2. Запустите сервер:
    - `php -S localhost:8000`
-3. Open:
+3. Откройте:
    - `http://localhost:8000/guestbook.php`
 
-## Conclusion
-Lab 3 demonstrates XSS risks in data-entry forms and applies layered controls to stop script injection.
+## Вывод
+Лабораторная работа 3 демонстрирует риски XSS в формах ввода и применяет многоуровневые меры для остановки внедрения скриптов.

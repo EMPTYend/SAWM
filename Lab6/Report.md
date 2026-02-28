@@ -1,60 +1,60 @@
-﻿# Lab 6 Report: User Action Logging for Security
+﻿# Отчет по лабораторной работе 6: Логирование действий пользователей для безопасности
 
-## Goal
-Add security logging of user activity and provide admin-only log viewing.
+## Цель
+Добавить security-логирование активности пользователей и предоставить просмотр логов только администратору.
 
-## Implemented
-- Added `logger.php` with file-based JSON logging.
-- Added log storage path:
-  - `logs/actions.log` (auto-created if missing).
-- Logged security events:
-  - successful login,
-  - failed login,
-  - validation-rejected login,
-  - logout,
-  - denied access (no auth / wrong role / no permission),
-  - admin panel open,
-  - manager panel open,
-  - account list view,
-  - account edit open,
-  - account update,
-  - account delete success/failure.
-- Added admin-only log viewer page:
+## Реализовано
+- Добавлен `logger.php` с файловым JSON-логированием.
+- Добавлен путь хранения логов:
+  - `logs/actions.log` (создается автоматически при отсутствии).
+- Добавлено логирование security-событий:
+  - успешный вход,
+  - неуспешный вход,
+  - вход, отклоненный валидацией,
+  - выход,
+  - отказ в доступе (нет аутентификации / неверная роль / нет разрешения),
+  - открытие панели администратора,
+  - открытие панели менеджера,
+  - просмотр списка учетных записей,
+  - открытие редактирования учетной записи,
+  - обновление учетной записи,
+  - успешное/неуспешное удаление учетной записи.
+- Добавлена страница просмотра логов только для администратора:
   - `view_logs.php`.
-- Added RBAC permission:
-  - `logs.view` assigned only to role `administrator`.
+- Добавлено разрешение RBAC:
+  - `logs.view` назначено только роли `administrator`.
 
-## Why Logging Is Required
-- Detect suspicious behavior and abuse attempts.
-- Support incident investigation and accountability.
-- Correlate actions over time (who/when/what).
+## Почему логирование необходимо
+- Выявление подозрительного поведения и попыток злоупотребления.
+- Поддержка расследования инцидентов и ответственности.
+- Корреляция действий во времени (кто/когда/что).
 
-## Privacy and Log Content
-The log stores operational security metadata only:
+## Конфиденциальность и состав логов
+В лог записываются только операционные метаданные безопасности:
 - timestamp,
-- action code,
-- user id/login/role,
+- код действия,
+- id/login/роль пользователя,
 - IP,
-- non-sensitive details.
+- нечувствительные детали.
 
-Sensitive secrets (raw passwords, session tokens) are not logged.
+Чувствительные секреты (пароли в открытом виде, токены сессий) не логируются.
 
-## Log Analysis and Rotation
-Recommended operational practices:
-- monitor unusual failed login patterns,
-- review permission-denied events,
-- archive/rotate large logs periodically,
-- restrict read access to log files.
+## Анализ логов и ротация
+Рекомендуемые операционные практики:
+- отслеживать аномальные шаблоны неуспешных входов,
+- анализировать события отказа в доступе,
+- периодически архивировать/ротировать крупные логи,
+- ограничивать права чтения файлов логов.
 
-## How to Run
-1. Initialize DB:
+## Как запустить
+1. Инициализируйте БД:
    - `mysql -u root -p < init.sql`
-2. Start server:
+2. Запустите сервер:
    - `php -S localhost:8000`
-3. Login as admin:
+3. Войдите как администратор:
    - `admin / admin123`
-4. Open:
-   - `view_logs.php` from admin panel.
+4. Откройте:
+   - `view_logs.php` из панели администратора.
 
-## Conclusion
-Lab 6 adds security auditability by recording user actions and exposing logs only to authorized administrator accounts.
+## Вывод
+Лабораторная работа 6 добавляет аудируемость безопасности за счет записи действий пользователей и предоставления логов только авторизованным учетным записям администратора.

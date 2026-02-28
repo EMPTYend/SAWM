@@ -1,66 +1,66 @@
-﻿# Lab 4 Report: Confidential Data Protection
+﻿# Отчет по лабораторной работе 4: Защита конфиденциальных данных
 
-## Goal
-Protect credentials by replacing plain-text password storage with secure salted hashes.
+## Цель
+Защитить учетные данные, заменив хранение паролей в открытом виде на безопасные хеши с солью.
 
-## Implemented Changes
-- Reused app from previous labs (auth + guestbook).
-- Updated authentication logic in `login.php`:
-  - query user by login,
-  - verify password with `password_verify()`.
-- Updated `init.sql`:
-  - passwords are stored as Argon2id hashes, not plain text.
-- Updated `admin.php`:
-  - displays contents of table `user` to show hash format in DB.
+## Реализованные изменения
+- Переиспользовано приложение из предыдущих работ (аутентификация + гостевая книга).
+- Обновлена логика аутентификации в `login.php`:
+  - поиск пользователя по логину,
+  - проверка пароля через `password_verify()`.
+- Обновлен `init.sql`:
+  - пароли хранятся как хеши Argon2id, а не в открытом виде.
+- Обновлен `admin.php`:
+  - отображает содержимое таблицы `user`, чтобы показать формат хеша в БД.
 
-## Analysis: Why Plain Text Passwords Are Vulnerable
-If DB is leaked, attackers immediately get real passwords and can:
-- sign in directly,
-- reuse passwords on other services,
-- automate account takeover.
+## Анализ: почему пароли в открытом виде уязвимы
+Если БД утечет, атакующие сразу получают реальные пароли и могут:
+- входить напрямую,
+- переиспользовать пароли на других сервисах,
+- автоматизировать захват учетных записей.
 
-## Recommended Password Policy
-- Length: 12+ characters.
-- Mix: upper/lower letters, digits, symbols.
-- Avoid dictionary words and personal data.
-- Use unique password per service.
+## Рекомендуемая парольная политика
+- Длина: 12+ символов.
+- Состав: буквы верхнего/нижнего регистра, цифры, спецсимволы.
+- Избегать слов из словаря и персональных данных.
+- Использовать уникальный пароль для каждого сервиса.
 
-Examples:
-- weak: `123456`, `qwerty`, `password`, `admin123`
-- strong: `Y3!nM7#qL2@vP9sK`, `Tea_Cabin+River_2041!`
+Примеры:
+- слабые: `123456`, `qwerty`, `password`, `admin123`
+- сильные: `Y3!nM7#qL2@vP9sK`, `Tea_Cabin+River_2041!`
 
-## Why MD5 and SHA1 Are Not Safe for Passwords
-- They are too fast, enabling large-scale brute force.
-- Collision resistance is broken/weak for practical security usage.
-- They are not memory-hard, so GPU/ASIC cracking is efficient.
+## Почему MD5 и SHA1 небезопасны для паролей
+- Эти алгоритмы слишком быстрые, что упрощает массовый brute force.
+- Их устойчивость к коллизиям нарушена/недостаточна для практической безопасности.
+- Они не являются memory-hard, поэтому взлом на GPU/ASIC эффективен.
 
-Attacks against MD5-hashed passwords:
-- dictionary and brute-force cracking,
-- rainbow table lookup,
-- credential stuffing if recovered plain password is reused.
+Атаки на пароли, хешированные MD5:
+- словарный и brute-force подбор,
+- lookup по rainbow-таблицам,
+- credential stuffing при повторном использовании восстановленного пароля.
 
-## Why Argon2id Was Chosen
-- Modern password hashing function.
-- Memory-hard design makes GPU attacks expensive.
-- Built-in random salt generation in `password_hash()`.
-- Supported in modern PHP versions.
+## Почему выбран Argon2id
+- Современная функция хеширования паролей.
+- Memory-hard дизайн делает GPU-атаки дорогими.
+- Встроенная генерация случайной соли в `password_hash()`.
+- Поддерживается в современных версиях PHP.
 
-## Role of Salt
-Salt is a random value added before hashing.
-Benefits:
-- same password does not produce same hash for different users,
-- rainbow table attacks become impractical,
-- per-user cracking cost increases significantly.
+## Роль соли
+Соль — это случайное значение, добавляемое перед хешированием.
+Преимущества:
+- одинаковый пароль не дает одинаковый хеш у разных пользователей,
+- атаки с rainbow-таблицами становятся непрактичными,
+- стоимость подбора для каждого пользователя значительно возрастает.
 
-## How to Run
-1. Initialize DB:
+## Как запустить
+1. Инициализируйте БД:
    - `mysql -u root -p < init.sql`
-2. Start server:
+2. Запустите сервер:
    - `php -S localhost:8000`
-3. Open:
+3. Откройте:
    - `http://localhost:8000/index.php`
-4. Login example:
+4. Пример входа:
    - `admin / admin123`
 
-## Conclusion
-Lab 4 hardens credential storage and verification using modern salted password hashing (Argon2id).
+## Вывод
+Лабораторная работа 4 усиливает хранение и проверку учетных данных с помощью современного хеширования паролей с солью (Argon2id).

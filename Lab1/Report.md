@@ -1,36 +1,35 @@
-# Lab 1 Report: Basic Vulnerable Authentication
+# Отчет по лабораторной работе 1: Базовая уязвимая аутентификация
 
-## Goal
-Build a baseline mini web app with:
-- login form (login + password),
-- database table `user`,
-- restricted admin page (not yet truly protected).
+## Цель
+Создать базовое мини-веб-приложение с:
+- формой входа (логин + пароль),
+- таблицей базы данных `user`,
+- ограниченной страницей администратора (пока без реальной защиты).
 
-## Implemented Files
-- `config.php` - DB and app settings.
-- `db.php` - PDO connection helper.
-- `index.php` - login form.
-- `login.php` - authentication handler (intentionally vulnerable SQL).
-- `admin.php` - admin page (open by URL without auth check).
-- `style.css` - basic UI style.
-- `init.sql` - DB schema + 7 users.
+## Реализованные файлы
+- `config.php` - настройки БД и приложения.
+- `db.php` - вспомогательный модуль подключения PDO.
+- `index.php` - форма входа.
+- `login.php` - обработчик аутентификации (намеренно уязвимый SQL).
+- `admin.php` - страница администратора (доступна по URL без проверки авторизации).
+- `style.css` - базовый стиль интерфейса.
+- `init.sql` - схема БД + 7 пользователей.
 
-## Security State
-- SQL injection is possible in `login.php` because SQL is built via string concatenation.
-- Direct access to `admin.php` is possible without authentication.
-- Passwords are stored in plain text.
+## Состояние безопасности
+- SQL-инъекция возможна в `login.php`, потому что SQL-запрос формируется конкатенацией строк.
+- Прямой доступ к `admin.php` возможен без аутентификации.
+- Пароли хранятся в открытом виде.
 
-## Test Notes
-1. Run SQL script:
+## Примечания по тестированию
+1. Запустите SQL-скрипт:
    - `mysql -u root -p < init.sql`
-2. Start PHP server:
+2. Запустите PHP-сервер:
    - `php -S localhost:8000`
-3. Open:
+3. Откройте:
    - `http://localhost:8000/index.php`
-4. Check:
-   - valid login works;
-   - `admin.php` opens directly.
+4. Проверьте:
+   - корректный вход работает;
+   - `admin.php` открывается напрямую.
 
-## Conclusion
-Lab 1 creates an intentionally weak baseline that will be hardened in next labs.
-
+## Вывод
+Лабораторная работа 1 создает намеренно слабую базовую версию, которая будет усилена в следующих работах.
